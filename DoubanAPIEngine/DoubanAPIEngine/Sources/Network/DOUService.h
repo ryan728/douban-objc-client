@@ -55,10 +55,14 @@
 - (DOUHttpRequest *)get:(DOUQuery *)query delegate:(id<DOUHttpRequestDelegate>)delegate;
 
 - (DOUHttpRequest *)post:(DOUQuery *)query delegate:(id<DOUHttpRequestDelegate>)delegate;
+- (DOUHttpRequest *)put:(DOUQuery *)query delegate:(id<DOUHttpRequestDelegate>)delegate;
 
 - (DOUHttpRequest *)post:(DOUQuery *)query object:(GDataEntryBase *)object delegate:(id<DOUHttpRequestDelegate>)delegate;
+- (DOUHttpRequest *)put:(DOUQuery *)query object:(GDataEntryBase *)object delegate:(id<DOUHttpRequestDelegate>)delegate;
 
 - (DOUHttpRequest *)delete:(DOUQuery *)query delegate:(id<DOUHttpRequestDelegate>)delegate;
+
+- (DOUHttpRequest *)put:(DOUQuery *)query object:(GDataEntryBase *)object callback:(DOUReqBlock)block;
 
 
 @end
