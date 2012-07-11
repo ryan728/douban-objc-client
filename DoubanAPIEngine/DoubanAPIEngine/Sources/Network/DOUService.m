@@ -379,6 +379,29 @@ static DOUService *myInstance = nil;
   return req;
 }
 
+- (DOUHttpRequest *)put:(DOUQuery *)query object:(GDataEntryBase *)object delegate:(id<DOUHttpRequestDelegate>)delegate {
+  query.apiBaseUrlString = self.apiBaseUrlString;
+  DOUHttpRequest * req = [DOUHttpRequest requestWithQuery:query target:delegate];
+
+  [req setRequestMethod:@"POST"];
+  [req addRequestHeader:@"Content-Type" value:@"application/atom+xml"];
+
+  if (object) {
+    NSString *string = [[object XMLElement] XMLString];
+    NSData *objectData = [string dataUsingEncoding:NSUTF8StringEncoding];
+    NSString *length = [NSString stringWithFormat:@"%d", [objectData length]];
+    [req appendPostData:objectData];
+    [req addRequestHeader:@"CONTENT_LENGTH" value:length];
+  }
+  else {
+    [req addRequestHeader:@"CONTENT_LENGTH" value:@"0"];
+  }
+
+  [req setResponseEncoding:NSUTF8StringEncoding];
+  [self addRequest:req];
+  return req;
+}
+
 
 - (DOUHttpRequest *)delete:(DOUQuery *)query delegate:(id<DOUHttpRequestDelegate>)delegate {
   query.apiBaseUrlString = self.apiBaseUrlString;
