@@ -123,6 +123,10 @@ static DOUOAuthStore *myInstance = nil;
 	}
 }
 
+-(BOOL) hasValidAccessToken {
+  return self.accessToken != nil && !self.hasExpired;
+}
+
 
 - (BOOL)shouldRefreshToken {
   NSDate *now = [NSDate date];

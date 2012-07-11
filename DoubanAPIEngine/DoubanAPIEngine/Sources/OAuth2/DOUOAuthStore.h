@@ -37,4 +37,5 @@
 
 - (void)clear;
 
+-(BOOL) hasValidAccessToken;
 @end
