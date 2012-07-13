@@ -37,9 +37,9 @@
 @class SBJsonStreamParserState;
 
 typedef enum {
-	SBJsonStreamParserComplete,
-	SBJsonStreamParserWaitingForData,
-	SBJsonStreamParserError,
+  SBJsonStreamParserComplete,
+  SBJsonStreamParserWaitingForData,
+  SBJsonStreamParserError,
 } SBJsonStreamParserStatus;
 
 
@@ -52,31 +52,31 @@ typedef enum {
 @protocol SBJsonStreamParserDelegate
 
 /// Called when object start is found
-- (void)parserFoundObjectStart:(SBJsonStreamParser*)parser;
+- (void)parserFoundObjectStart:(SBJsonStreamParser *)parser;
 
 /// Called when object key is found
-- (void)parser:(SBJsonStreamParser*)parser foundObjectKey:(NSString*)key;
+- (void)parser:(SBJsonStreamParser *)parser foundObjectKey:(NSString *)key;
 
 /// Called when object end is found
-- (void)parserFoundObjectEnd:(SBJsonStreamParser*)parser;
+- (void)parserFoundObjectEnd:(SBJsonStreamParser *)parser;
 
 /// Called when array start is found
-- (void)parserFoundArrayStart:(SBJsonStreamParser*)parser;
+- (void)parserFoundArrayStart:(SBJsonStreamParser *)parser;
 
 /// Called when array end is found
-- (void)parserFoundArrayEnd:(SBJsonStreamParser*)parser;
+- (void)parserFoundArrayEnd:(SBJsonStreamParser *)parser;
 
 /// Called when a boolean value is found
-- (void)parser:(SBJsonStreamParser*)parser foundBoolean:(BOOL)x;
+- (void)parser:(SBJsonStreamParser *)parser foundBoolean:(BOOL)x;
 
 /// Called when a null value is found
-- (void)parserFoundNull:(SBJsonStreamParser*)parser;
+- (void)parserFoundNull:(SBJsonStreamParser *)parser;
 
 /// Called when a number is found
-- (void)parser:(SBJsonStreamParser*)parser foundNumber:(NSNumber*)num;
+- (void)parser:(SBJsonStreamParser *)parser foundNumber:(NSNumber *)num;
 
 /// Called when a string is found
-- (void)parser:(SBJsonStreamParser*)parser foundString:(NSString*)string;
+- (void)parser:(SBJsonStreamParser *)parser foundString:(NSString *)string;
 
 @end
 
@@ -99,17 +99,17 @@ typedef enum {
  */
 @interface SBJsonStreamParser : NSObject {
 @private
-	BOOL supportMultipleDocuments;
-	id<SBJsonStreamParserDelegate> delegate;
-	SBJsonTokeniser *tokeniser;
-    NSMutableArray *stateStack;
-	__weak SBJsonStreamParserState *state;
-	NSUInteger maxDepth;
-	NSString *error;
+  BOOL supportMultipleDocuments;
+  id <SBJsonStreamParserDelegate> delegate;
+  SBJsonTokeniser *tokeniser;
+  NSMutableArray *stateStack;
+  SBJsonStreamParserState *state;
+  NSUInteger maxDepth;
+  NSString *error;
 }
 
-@property (nonatomic, strong) __weak SBJsonStreamParserState *state; // Private
-@property (nonatomic, readonly, retain) NSMutableArray *stateStack; // Private
+@property(nonatomic, strong) SBJsonStreamParserState *state; // Private
+@property(nonatomic, readonly, retain) NSMutableArray *stateStack; // Private
 
 /**
  @brief Expect multiple documents separated by whitespace
@@ -135,7 +135,7 @@ typedef enum {
  Usually this should be an instance of SBJsonStreamParserAdapter, but you can
  substitute your own implementation of the SBJsonStreamParserDelegate protocol if you need to. 
  */
-@property (assign) id<SBJsonStreamParserDelegate> delegate;
+@property(assign) id <SBJsonStreamParserDelegate> delegate;
 
 /**
  @brief The max parse depth
@@ -147,7 +147,7 @@ typedef enum {
 @property NSUInteger maxDepth;
 
 /// Holds the error after SBJsonStreamParserError was returned
-@property (copy) NSString *error;
+@property(copy) NSString *error;
 
 /**
  @brief Parse some JSON
@@ -162,6 +162,6 @@ typedef enum {
  @li SBJsonStreamParserError if an error occured. (See the error property for details in this case.)
  
  */
-- (SBJsonStreamParserStatus)parse:(NSData*)data;
+- (SBJsonStreamParserStatus)parse:(NSData *)data;
 
 @end
