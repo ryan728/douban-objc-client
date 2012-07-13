@@ -40,24 +40,27 @@
 
 @implementation SBJsonStreamParserState
 
-+ (id)sharedInstance { return nil; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	return NO;
++ (id)sharedInstance {
+  return nil;
 }
 
-- (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser*)parser {
-	return SBJsonStreamParserWaitingForData;
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  return NO;
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {}
+- (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser *)parser {
+  return SBJsonStreamParserWaitingForData;
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+}
 
 - (BOOL)needKey {
-	return NO;
+  return NO;
 }
 
-- (NSString*)name {
-	return @"<aaiie!>";
+- (NSString *)name {
+  return @"<aaiie!>";
 }
 
 @end
@@ -68,43 +71,45 @@
 
 SINGLETON
 
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	return token == sbjson_token_array_start || token == sbjson_token_object_start;
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  return token == sbjson_token_array_start || token == sbjson_token_object_start;
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
 
-	SBJsonStreamParserState *state = nil;
-	switch (tok) {
-		case sbjson_token_array_start:
-			state = [SBJsonStreamParserStateArrayStart sharedInstance];
-			break;
+  SBJsonStreamParserState *state = nil;
+  switch (tok) {
+    case sbjson_token_array_start:
+      state = [SBJsonStreamParserStateArrayStart sharedInstance];
+      break;
 
-		case sbjson_token_object_start:
-			state = [SBJsonStreamParserStateObjectStart sharedInstance];
-			break;
+    case sbjson_token_object_start:
+      state = [SBJsonStreamParserStateObjectStart sharedInstance];
+      break;
 
-		case sbjson_token_array_end:
-		case sbjson_token_object_end:
-			if (parser.supportMultipleDocuments)
-				state = parser.state;
-			else
-				state = [SBJsonStreamParserStateComplete sharedInstance];
-			break;
+    case sbjson_token_array_end:
+    case sbjson_token_object_end:
+      if (parser.supportMultipleDocuments)
+        state = parser.state;
+      else
+        state = [SBJsonStreamParserStateComplete sharedInstance];
+      break;
 
-		case sbjson_token_eof:
-			return;
+    case sbjson_token_eof:
+      return;
 
-		default:
-			state = [SBJsonStreamParserStateError sharedInstance];
-			break;
-	}
+    default:
+      state = [SBJsonStreamParserStateError sharedInstance];
+      break;
+  }
 
 
-	parser.state = state;
+  parser.state = state;
 }
 
-- (NSString*)name { return @"before outer-most array or object"; }
+- (NSString *)name {
+  return @"before outer-most array or object";
+}
 
 @end
 
@@ -114,10 +119,12 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"after outer-most array or object"; }
+- (NSString *)name {
+  return @"after outer-most array or object";
+}
 
-- (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser*)parser {
-	return SBJsonStreamParserComplete;
+- (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser *)parser {
+  return SBJsonStreamParserComplete;
 }
 
 @end
@@ -128,10 +135,12 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"in error"; }
+- (NSString *)name {
+  return @"in error";
+}
 
-- (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser*)parser {
-	return SBJsonStreamParserError;
+- (SBJsonStreamParserStatus)parserShouldReturn:(SBJsonStreamParser *)parser {
+  return SBJsonStreamParserError;
 }
 
 @end
@@ -142,26 +151,28 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"at beginning of object"; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	switch (token) {
-		case sbjson_token_object_end:
-		case sbjson_token_string:
-			return YES;
-			break;
-		default:
-			return NO;
-			break;
-	}
+- (NSString *)name {
+  return @"at beginning of object";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateObjectGotKey sharedInstance];
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  switch (token) {
+    case sbjson_token_object_end:
+    case sbjson_token_string:
+      return YES;
+      break;
+    default:
+      return NO;
+      break;
+  }
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateObjectGotKey sharedInstance];
 }
 
 - (BOOL)needKey {
-	return YES;
+  return YES;
 }
 
 @end
@@ -172,14 +183,16 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"after object key"; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	return token == sbjson_token_keyval_separator;
+- (NSString *)name {
+  return @"after object key";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateObjectSeparator sharedInstance];
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  return token == sbjson_token_keyval_separator;
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateObjectSeparator sharedInstance];
 }
 
 @end
@@ -190,28 +203,30 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"as object value"; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	switch (token) {
-		case sbjson_token_object_start:
-		case sbjson_token_array_start:
-		case sbjson_token_true:
-		case sbjson_token_false:
-		case sbjson_token_null:
-		case sbjson_token_number:
-		case sbjson_token_string:
-			return YES;
-			break;
-
-		default:
-			return NO;
-			break;
-	}
+- (NSString *)name {
+  return @"as object value";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateObjectGotValue sharedInstance];
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  switch (token) {
+    case sbjson_token_object_start:
+    case sbjson_token_array_start:
+    case sbjson_token_true:
+    case sbjson_token_false:
+    case sbjson_token_null:
+    case sbjson_token_number:
+    case sbjson_token_string:
+      return YES;
+      break;
+
+    default:
+      return NO;
+      break;
+  }
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateObjectGotValue sharedInstance];
 }
 
 @end
@@ -222,22 +237,24 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"after object value"; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	switch (token) {
-		case sbjson_token_object_end:
-		case sbjson_token_separator:
-			return YES;
-			break;
-		default:
-			return NO;
-			break;
-	}
+- (NSString *)name {
+  return @"after object value";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateObjectNeedKey sharedInstance];
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  switch (token) {
+    case sbjson_token_object_end:
+    case sbjson_token_separator:
+      return YES;
+      break;
+    default:
+      return NO;
+      break;
+  }
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateObjectNeedKey sharedInstance];
 }
 
 
@@ -249,18 +266,20 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"in place of object key"; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-    return sbjson_token_string == token;
+- (NSString *)name {
+  return @"in place of object key";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateObjectGotKey sharedInstance];
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  return sbjson_token_string == token;
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateObjectGotKey sharedInstance];
 }
 
 - (BOOL)needKey {
-	return YES;
+  return YES;
 }
 
 @end
@@ -271,24 +290,26 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"at array start"; }
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	switch (token) {
-		case sbjson_token_object_end:
-		case sbjson_token_keyval_separator:
-		case sbjson_token_separator:
-			return NO;
-			break;
-
-		default:
-			return YES;
-			break;
-	}
+- (NSString *)name {
+  return @"at array start";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateArrayGotValue sharedInstance];
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  switch (token) {
+    case sbjson_token_object_end:
+    case sbjson_token_keyval_separator:
+    case sbjson_token_separator:
+      return NO;
+      break;
+
+    default:
+      return YES;
+      break;
+  }
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateArrayGotValue sharedInstance];
 }
 
 @end
@@ -299,16 +320,18 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"after array value"; }
-
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	return token == sbjson_token_array_end || token == sbjson_token_separator;
+- (NSString *)name {
+  return @"after array value";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	if (tok == sbjson_token_separator)
-		parser.state = [SBJsonStreamParserStateArrayNeedValue sharedInstance];
+
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  return token == sbjson_token_array_end || token == sbjson_token_separator;
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  if (tok == sbjson_token_separator)
+    parser.state = [SBJsonStreamParserStateArrayNeedValue sharedInstance];
 }
 
 @end
@@ -319,26 +342,28 @@ SINGLETON
 
 SINGLETON
 
-- (NSString*)name { return @"as array value"; }
-
-
-- (BOOL)parser:(SBJsonStreamParser*)parser shouldAcceptToken:(sbjson_token_t)token {
-	switch (token) {
-		case sbjson_token_array_end:
-		case sbjson_token_keyval_separator:
-		case sbjson_token_object_end:
-		case sbjson_token_separator:
-			return NO;
-			break;
-
-		default:
-			return YES;
-			break;
-	}
+- (NSString *)name {
+  return @"as array value";
 }
 
-- (void)parser:(SBJsonStreamParser*)parser shouldTransitionTo:(sbjson_token_t)tok {
-	parser.state = [SBJsonStreamParserStateArrayGotValue sharedInstance];
+
+- (BOOL)parser:(SBJsonStreamParser *)parser shouldAcceptToken:(sbjson_token_t)token {
+  switch (token) {
+    case sbjson_token_array_end:
+    case sbjson_token_keyval_separator:
+    case sbjson_token_object_end:
+    case sbjson_token_separator:
+      return NO;
+      break;
+
+    default:
+      return YES;
+      break;
+  }
+}
+
+- (void)parser:(SBJsonStreamParser *)parser shouldTransitionTo:(sbjson_token_t)tok {
+  parser.state = [SBJsonStreamParserStateArrayGotValue sharedInstance];
 }
 
 @end

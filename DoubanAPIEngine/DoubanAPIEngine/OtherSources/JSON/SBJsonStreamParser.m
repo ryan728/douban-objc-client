@@ -52,7 +52,6 @@
     maxDepth = 32u;
     stateStack = [[NSMutableArray alloc] initWithCapacity:maxDepth];
     state = [SBJsonStreamParserStateStart sharedInstance];
-    NSLog(@"---------------- [state class] = %@", [state class]);
     tokeniser = [[SBJsonTokeniser alloc] init];
   }
   return self;
