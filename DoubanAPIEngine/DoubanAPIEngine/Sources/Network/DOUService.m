@@ -309,7 +309,7 @@ static DOUService *myInstance = nil;
   
   postContent = [postContent stringByAppendingString:encodingStr];
   
-  postContent = [postContent stringByAppendingFormat:@"--END_OF_PART--", format];
+  postContent = [postContent stringByAppendingString:@"--END_OF_PART--"];
   NSData *postData = [postContent dataUsingEncoding:NSUTF8StringEncoding];
   NSInteger length = [postData length];
   [req addRequestHeader:@"Content-Length" value:[NSString stringWithFormat:@"%d", length]];
