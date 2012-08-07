@@ -1391,7 +1391,7 @@
 		D800D52F146907B2009F64FD /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0440;
 				ORGANIZATIONNAME = "Douban Inc";
 			};
 			buildConfigurationList = D800D532146907B2009F64FD /* Build configuration list for PBXProject "DoubanAPIEngine" */;
